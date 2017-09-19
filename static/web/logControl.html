@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LogControl</title>
+    <script
+            src="http://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script>
+        window.onload = function () {
+          const HOST = 'http://127.0.0.1:8889';
+          $("#test").click(function () {
+            if ($("#date_t").value === ''){
+              alert("请选择日期");
+              return;
+            }
+            if ($("#com_t").value === ''){
+              alert("请务必填写备注以做区分");
+              return;
+            }
+            let data = {
+              provider: $("#provider_t").value,
+              date: $("#date_t").value,
+              comment: $("#com_t").value
+            }
+            $.post(HOST + '/test', data, function (data, status) {
+              if (status !== 'success'){
+                alert(status);
+              }
+              if (data['code'] === 200){
+                alert("提交成功");
+              }
+            });
+          });
+          $("#query").click(function () {
+            if ($("#date_q").value === '') {
+              alert("请选择日期");
+              return;
+            }
+            if ($("#com_q").value === '') {
+              alert("请务必填写备注以做区分");
+              return;
+            }
+            let data = {
+              provider: $("#provider_q").value,
+              date: $("#date_q").value,
+              comment: $("#com_q").value
+            }
+            $.post(HOST + '/result', data, function (data, status) {
+              if (status !== 'success') {
+                alert(status);
+              }
+              if (data['code'] === 200) {
+                alert("提交成功");
+                $("pre").html(data['result']);
+              }
+            });
+          });
+        }
+    </script>
+</head>
+<body>
+<div>
+    <span>预约测试</span>
+    <br/>
+    <input id="provider_t" value="aliyun" placeholder="厂商" clearable="true"/>
+    <input id="date_t" type="date"/>
+    <input id="com_t" placeholder="备注"/>
+    <button id="test">进入测试队列</button>
+</div>
+<div>
+    <span>测试结果查询</span>
+    <br/>
+    <input id="com_q" placeholder="备注"/>
+    <input id="date_q" type="date"/>
+    <input id="provider_q" value="aliyun" placeholder="厂商" clearable="true"/>
+    <button id="query">查询</button>
+</div>
+<div>
+    <pre></pre>
+</div>
+</body>
+</html>
